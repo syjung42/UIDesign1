@@ -6,13 +6,23 @@
 
 /* adjusting fonts */
 
+::selection {
+  background-color: yellow;
+  color: black;
+}
+
+
+
 body {
 	font-family: -apple-system, BlinkMacSystemFont, helvetica, arial, sans-serif;
 	transition: background 500ms ease;
+	background: hotpink;
+	color:yellow;
+	font-family: serif;
 }
 
 p, li {
-	font-size:  22px;
+	font-size:  20px;
 	line-height: 30px;
 }
 
@@ -23,7 +33,17 @@ p, li {
 }
 
 h1, p {
-	margin-bottom:  20px;
+	font-size:  28px;
+	margin-bottom:  25px;
+	text-shadow: 0px 0px 10px white;
+}
+
+
+
+h3{
+	margin-top:  25px;
+	font-size: 24px;
+	text-shadow: 0px 0px 10px white;
 }
 
 ul, ol {
