@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>지각 방지 시계 (정확한 KST)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Helvetica Neue', sans-serif;
+      background: #f1f5f9;
+      color: #111;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 0.5em;
+    }
+
+    .time {
+      font-size: 2.3rem;
+      font-weight: bold;
+      color: #0c4a6e;
+    }
+  </style>
+</head>
+<body>
+  <h1>지각 방지 시계 (정확한 한국 표준시 +10분)</h1>
+  <div class="time" id="timeDisplay">--:--:--</div>
+
+  <script>
+    const days = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+
+    // 기준 시간: UTC + 9시간 (KST) + 10분
+    function getKSTTimeWithOffset(offsetMinutes = 0) {
+      const now = new Date();
+      const utcTime = now.getTime() + (now.getTimezoneOffset() * 60000); // UTC 기준 시간
+      const kstTime = new Date(utcTime + (9 * 60 + offsetMinutes) * 60000); // KST + offset
+      return kstTime;
+    }
+
+    let fastNow = getKSTTimeWithOffset(10); // 시작 시간: 정확한 한국 시간 + 10분
+
+    function updateTime() {
+      fastNow = new Date(fastNow.getTime() + 1000); // 1초씩 증가
+
+      const year = fastNow.getFullYear();
+      const month = fastNow.getMonth() + 1;
+      const date = fastNow.getDate();
+      const day = days[fastNow.getDay()];
+      const hours = fastNow.getHours().toString().padStart(2, '0');
+      const minutes = fastNow.getMinutes().toString().padStart(2, '0');
+      const seconds = fastNow.getSeconds().toString().padStart(2, '0');
+
+      const timeStr = `${year}년 ${month}월 ${date}일 ${day}, ${hours}:${minutes}:${seconds}`;
+      document.getElementById('timeDisplay').textContent = timeStr;
+    }
+
+    updateTime();
+    setInterval(updateTime, 1000);
+  </script>
+</body>
+</html>

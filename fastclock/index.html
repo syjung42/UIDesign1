@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FastTime - 지각 방지 타이머</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+
+  <img src="tile.svg" class="tile-deco top" alt="Top Decoration">
+  <img src="tile.svg" class="tile-deco bottom" alt="Bottom Decoration">
+
+  <!-- 첫 화면 -->
+
+  <div class="container" id="page1">
+
+
+
+
+    <h1 id="titleBox">
+  Anti-Late Timer
+  <img src="ribbon.svg" class="deco-svg deco-left" alt="decoration">
+  <img src="ribbon.svg" class="deco-svg deco-right" alt="decoration">
+</h1>
+
+
+
+
+
+
+    <div id="currentTime"></div>
+    <button onclick="goToPage(2)">Let's Prepare!</button>
+
+
+
+
+  <div class="help-icon">
+  ?
+  <div class="tooltip">
+   <p> Are you often running 10 minutes late to your appointments?</p>
+Anti-Late Timer (ALT) is a simple yet smart timer that helps you stay perfectly on time.
+<p>By calculating your preparation and travel time, ALT ensures you always start getting ready at the right moment — and arrive without being late.</p>
+With ALT, you'll always be fashionably on time!</div>
+</div>
+
+
+
+
+
+  </div>
+
+  <!-- 입력 화면 -->
+  <div class="container hidden" id="page2">
+    <h1>Get Ready for Your Appointment!</h1>
+
+    <label>Appointment Time:</label>
+    <input type="time" id="appointmentTime" />
+
+    <label>Travel Time:</label>
+    <div class="time-select">
+      <select id="transitHour"></select> 시간
+      <select id="transitMinute"></select> 분
+    </div>
+
+    <label>Preparation Time:</label>
+    <div class="time-select">
+      <select id="prepHour"></select> 시간
+      <select id="prepMinute"></select> 분
+    </div>
+
+     <div class="nav-buttons">
+      <button class="btn-back" onclick="goToPage(1)">Back</button>
+      <button class="btn-next" onclick="calculateTimes()">Next</button>
+    </div>
+  
+  </div>
+
+
+
+
+
+
+
+
+
+  <!-- 결과 화면 -->
+  <div class="container hidden" id="page3">
+    <h1>Your Schedule</h1>
+
+    <p>Start Preparing At:</p>
+    <div class="result-box" id="prepStartTime">00:00</div>
+
+    <p>Leave By:</p>
+    <div class="result-box" id="leaveTime">00:00</div>
+
+    <div class="nav-buttons">
+      <button class="btn-back" onclick="goToPage(2)">Back</button>
+      <button class="btn-next" onclick="startTimer()">Next</button>
+    </div>
+  </div>
+
+
+
+
+ 
+
+
+
+
+
+
+  <!-- 타이머 화면 -->
+  <div class="container hidden" id="page4">
+
+
+<audio id="countdownAudio" src="countdown.mp3" loop></audio>
+
+
+    <h2>Let's Get Ready!</h2>
+    <p class="caption-text">Time may flow a bit faster here!</p>
+    <div class="circle">
+    <svg width="300" height="300">
+      <circle cx="150" cy="150" r="120" stroke="#474747" stroke-width="20" fill="none"/>
+      <circle id="progress" cx="150" cy="150" r="120" stroke="#FFEA74" stroke-width="20" fill="none"
+              stroke-linecap="round"
+              stroke-dasharray="753.98" stroke-dashoffset="753.98"
+              transform="rotate(-90 150 150)"/>
+      </svg>
+      <div class="time-text" id="countdownTime">00:00</div>
+    </div>
+    <div id="currentFastTime"></div>
+    <div class="nav-buttons">
+      <button class="btn-back" onclick="goToPage(3)">Back</button>
+      <button class="btn-next" onclick="goToPage(1)">Home</button>
+    </div>
+  </div>
+
+
+
+<!-- 완료 화면 -->
+<div class="container hidden" id="page5">
+  <h1 class="finish-title">You won't be late!</h1>
+  <img src="flag.svg" alt="Flag" class="finish-flag">
+  <div class="nav-buttons">
+    <button class="btn-next" onclick="goToPage(1)">Home</button>
+  </div>
+</div>
+
+
+
+
+<audio id="finishAudio" src="finish.mp3"></audio>
+
+
+
+
+
+
+  <script src="script.js"></script>
+</body>
+</html>

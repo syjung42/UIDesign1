@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>지각 방지 타이머</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', sans-serif;
+      background: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 1rem;
+      margin-bottom: 1em;
+    }
+
+    .time {
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 0.3em 0;
+    }
+
+    .circle-timer {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      border: 10px solid #eee;
+      position: relative;
+      margin: 1em auto;
+    }
+
+    .circle-progress {
+      stroke: #333;
+      stroke-width: 10;
+      fill: none;
+      stroke-linecap: round;
+      transform: rotate(-90deg);
+      transform-origin: center;
+    }
+
+    .btn {
+      background-color: #ccc;
+      border: none;
+      padding: 0.6em 1em;
+      font-size: 1rem;
+      margin-top: 1em;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .input-group {
+      margin: 1em 0;
+    }
+
+    input[type="time"] {
+      font-size: 1rem;
+      padding: 0.3em 0.6em;
+      border-radius: 20px;
+      border: none;
+      background: #e2e2e2;
+    }
+  </style>
+</head>
+<body>
+  <div id="page1">
+    <h1>Title</h1>
+    <div class="time" id="currentDate"></div>
+    <div class="time" id="currentTime"></div>
+    <button class="btn" onclick="goToPage(2)">준비 시작하기</button>
+  </div>
+
+  <div id="page2" class="hidden">
+    <h1>Title</h1>
+    <div class="input-group">
+      <p>몇시 약속인가요?</p>
+      <input type="time" id="appointmentTime" />
+    </div>
+    <div class="input-group">
+      <p>약속 장소까지 얼마나 걸리나요?</p>
+      <input type="time" id="travelTime" value="01:00" />
+    </div>
+    <div class="input-group">
+      <p>나의 평균 준비 시간은?</p>
+      <input type="time" id="prepTime" value="01:30" />
+    </div>
+    <button class="btn" onclick="calculateTimes()">준비 시작</button>
+  </div>
+
+  <div id="page3" class="hidden">
+    <h1>Title</h1>
+    <p>이 때에는 준비를 시작해야해요</p>
+    <div class="time" id="startPrepDisplay">00:00</div>
+    <p>이 시간에는 집에서 나가야해요</p>
+    <div class="time" id="leaveHomeDisplay">00:00</div>
+    <button class="btn" onclick="goToPage(4)">준비 시작</button>
+  </div>
+
+  <div id="page4" class="hidden">
+    <p>늦지 않게 준비해봐요!</p>
+    <svg width="200" height="200">
+      <circle cx="100" cy="100" r="90" stroke="#eee" stroke-width="10" fill="none" />
+      <circle id="progressCircle" class="circle-progress" cx="100" cy="100" r="90" />
+    </svg>
+    <div class="time" id="prepCountdown">--:--</div>
+    <div class="time" id="currentDate2"></div>
+    <div class="time" id="currentTime2"></div>
+  </div>
+
+  <script>
+    let currentPage = 1;
+    let prepDuration = 0;
+    let prepEndTime;
+    let countdownInterval;
+
+    function goToPage(n) {
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById(`page${i}`).classList.add("hidden");
+      }
+      document.getElementById(`page${n}`).classList.remove("hidden");
+      currentPage = n;
+    }
+
+    function updateDateTime() {
+      const now = new Date();
+      const dateStr = `${now.getFullYear()}년 ${now.getMonth() + 1}월 ${now.getDate()}일 ${['일', '월', '화', '수', '목', '금', '토'][now.getDay()]}요일`;
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+      document.getElementById("currentDate").textContent = dateStr;
+      document.getElementById("currentTime").textContent = timeStr;
+      document.getElementById("currentDate2").textContent = dateStr;
+      document.getElementById("currentTime2").textContent = timeStr;
+    }
+
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+
+    function timeStringToMinutes(timeStr) {
+      const [h, m] = timeStr.split(":").map(Number);
+      return h * 60 + m;
+    }
+
+    function minutesToTimeString(mins) {
+      const h = Math.floor(mins / 60) % 24;
+      const m = Math.floor(mins % 60);
+      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    }
+
+    function calculateTimes() {
+      const appointment = timeStringToMinutes(document.getElementById("appointmentTime").value);
+      const travel = timeStringToMinutes(document.getElementById("travelTime").value);
+      const prep = timeStringToMinutes(document.getElementById("prepTime").value);
+
+      const leaveHome = appointment - travel - 10; // 10분 일찍 출발
+      const startPrep = leaveHome - prep - 10;     // 10분 일찍 준비 시작
+
+      document.getElementById("startPrepDisplay").textContent = minutesToTimeString(startPrep);
+      document.getElementById("leaveHomeDisplay").textContent = minutesToTimeString(leaveHome);
+
+      prepDuration = prep + 10; // 타이머 길이
+      prepEndTime = new Date(new Date().getTime() + prepDuration * 60000);
+
+      goToPage(3);
+    }
+
+    function startCountdown() {
+      goToPage(4);
+      countdownInterval = setInterval(() => {
+        const now = new Date();
+        const diff = Math.max(0, Math.floor((prepEndTime - now) / 1000));
+
+        const mins = Math.floor(diff / 60);
+        const secs = diff % 60;
+        document.getElementById("prepCountdown").textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+
+        const circle = document.getElementById("progressCircle");
+        const total = prepDuration * 60;
+        const percent = 1 - diff / total;
+        const circumference = 2 * Math.PI * 90;
+        circle.setAttribute("stroke-dasharray", circumference);
+        circle.setAttribute("stroke-dashoffset", circumference * (1 - percent));
+
+        if (diff <= 0) clearInterval(countdownInterval);
+      }, 1000);
+    }
+
+    document.querySelector("#page3 button").addEventListener("click", startCountdown);
+  </script>
+</body>
+</html>
