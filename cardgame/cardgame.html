@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A5 PNG Card Display</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .image-container {
+      display: flex;
+      gap: 50px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .image-container img {
+      width: 420px; 
+      height: auto;
+    }
+
+    @media (max-width: 800px) {
+      .image-container {
+        flex-direction: column;
+      }
+
+      .image-container img {
+        width: 80vw;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="image-container">
+    <img src="solo.png" alt="Solo Version">
+    <img src="together.png" alt="Together Version">
+  </div>
+
+</body>
+</html>
